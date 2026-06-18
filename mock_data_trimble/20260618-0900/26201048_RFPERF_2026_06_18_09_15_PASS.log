@@ -1,0 +1,259 @@
+Pass
+Serial Number: 26201048
+PCB Number: K2526000000000115A
+Part Number: 000000-00
+R980
+COM6
+Start 06/18/2026 09:15:00
+Stop  06/18/2026 09:15:50
+Test Station 0
+DRxRFPerformance.exe Version 1.00.74, Configuration file v4.00
+
+Load serial number: PASS
+     Value =        26201048     Allowable =        26201048     Result = PASS
+
+Load options: PASS
+
+C:\MfgTest\RFPerformance\ReceiverFiles\Test.opt
+
+     10 Hz Measurements             Value =         On      Allowable =         On      Result =   PASS
+     20 Hz Measurements             Value =         On      Allowable =         On      Result =   PASS
+     Advanced RTCM Output           Value =        Off      Allowable =        Off      Result =   PASS
+     Almanac Server                 Value =        Off      Allowable =        Off      Result =   PASS
+     Antenna Near Field             Value =        Off      Allowable =        Off      Result =   PASS
+     Beacon                         Value =         On      Allowable =         On      Result =   PASS
+     Binary Outputs                 Value =         On      Allowable =         On      Result =   PASS
+     Bluetooth                      Value =         On      Allowable =         On      Result =   PASS
+     Cellular                       Value =        Off      Allowable =        Off      Result =   PASS
+     CLAS                           Value =        Off      Allowable =        Off      Result =   PASS
+     CMR Inputs                     Value =        Off      Allowable =        Off      Result =   PASS
+     CMR Outputs                    Value =        Off      Allowable =        Off      Result =   PASS
+     Data Collector                 Value =        Off      Allowable =        Off      Result =   PASS
+     Data Logging                   Value =         On      Allowable =         On      Result =   PASS
+     Disable 1PPS                   Value =        Off      Allowable =        Off      Result =   PASS
+     Disable 450MHz Band            Value =        Off      Allowable =        Off      Result =   PASS
+     Disable 900MHz Band            Value =        Off      Allowable =        Off      Result =   PASS
+     Disable Beta Bomb              Value =         On      Allowable =         On      Result =   PASS
+     Disable CMRx Inputs            Value =        Off      Allowable =        Off      Result =   PASS
+     Disable CMRx Outputs           Value =        Off      Allowable =        Off      Result =   PASS
+     Disable Everest                Value =        Off      Allowable =        Off      Result =   PASS
+     Disable Faster than 1 Hz       Value =        Off      Allowable =        Off      Result =   PASS
+     Disable FTP Server             Value =        Off      Allowable =        Off      Result =   PASS
+     Disable GPS                    Value =        Off      Allowable =        Off      Result =   PASS
+     Disable High Accuracy NMEA     Value =        Off      Allowable =        Off      Result =   PASS
+     Disable L2 Output              Value =        Off      Allowable =        Off      Result =   PASS
+     Disable NMEA                   Value =        Off      Allowable =        Off      Result =   PASS
+     Disable Radio                  Value =        Off      Allowable =        Off      Result =   PASS
+     Disable SBAS                   Value =        Off      Allowable =        Off      Result =   PASS
+     Disable USB                    Value =        Off      Allowable =        Off      Result =   PASS
+     Disable Vector Antenna         Value =        Off      Allowable =        Off      Result =   PASS
+     Disable VRS                    Value =        Off      Allowable =        Off      Result =   PASS
+     Enable ALO Output              Value =        Off      Allowable =        Off      Result =   PASS
+     Enable BeiDou                  Value =         On      Allowable =         On      Result =   PASS
+     Enable BeiDou B1C              Value =        Off      Allowable =        Off      Result =   PASS
+     Enable BeiDou B3               Value =         On      Allowable =         On      Result =   PASS
+     Enable CDGPS                   Value =        Off      Allowable =        Off      Result =   PASS
+     Enable Galileo                 Value =         On      Allowable =         On      Result =   PASS
+     Enable Galileo E6              Value =         On      Allowable =         On      Result =   PASS
+     Enable GIOVE                   Value =        Off      Allowable =        Off      Result =   PASS
+     Enable GLONASS                 Value =         On      Allowable =         On      Result =   PASS
+     Enable GPS L1E                 Value =        Off      Allowable =        Off      Result =   PASS
+     Enable GPS-L1C                 Value =        Off      Allowable =        Off      Result =   PASS
+     Enable IoT-Security            Value =        Off      Allowable =        Off      Result =   PASS
+     Enable IRNSS                   Value =         On      Allowable =         On      Result =   PASS
+     Enable L1-RTK                  Value =        Off      Allowable =        Off      Result =   PASS
+     Enable Nano RTK                Value =        Off      Allowable =        Off      Result =   PASS
+     Enable OEM StreamLog           Value =        Off      Allowable =        Off      Result =   PASS
+     Enable Position Monitoring     Value =        Off      Allowable =        Off      Result =   PASS
+     Enable Programmatic Interface  Value =        Off      Allowable =        Off      Result =   PASS
+     Enable PVT Switch              Value =        Off      Allowable =        Off      Result =   PASS
+     Enable QZSS                    Value =        Off      Allowable =        Off      Result =   PASS
+     Enable QZSS L1C                Value =        Off      Allowable =        Off      Result =   PASS
+     Enable QZSS LEX                Value =        Off      Allowable =        Off      Result =   PASS
+     Enable Restricted Functions    Value =        Off      Allowable =        Off      Result =   PASS
+     Enable RTCM DGPS Output        Value =        Off      Allowable =        Off      Result =   PASS
+     Enable RTK Init Limited        Value =        Off      Allowable =        Off      Result =   PASS
+     Enable RTK+                    Value =        Off      Allowable =        Off      Result =   PASS
+     Enable RTX on 3rd Party        Value =        Off      Allowable =        Off      Result =   PASS
+     Enable Simulator Support       Value =        Off      Allowable =        Off      Result =   PASS
+     Enable USB Hard Drive          Value =        Off      Allowable =        Off      Result =   PASS
+     Enable Webserver               Value =         On      Allowable =         On      Result =   PASS
+     Ephemeris Server               Value =        Off      Allowable =        Off      Result =   PASS
+     Event Marker                   Value =        Off      Allowable =        Off      Result =   PASS
+     Force Float with Static CMR    Value =        Off      Allowable =        Off      Result =   PASS
+     Force RTK Float                Value =        Off      Allowable =        Off      Result =   PASS
+     Fugro Web UI                   Value =        Off      Allowable =        Off      Result =   PASS
+     Guidance                       Value =        Off      Allowable =        Off      Result =   PASS
+     HAS                            Value =        Off      Allowable =        Off      Result =   PASS
+     Heading Mode Only              Value =        Off      Allowable =        Off      Result =   PASS
+     Inertial Navigation            Value =        Off      Allowable =        Off      Result =   PASS
+     L2CS                           Value =         On      Allowable =         On      Result =   PASS
+     L5                             Value =         On      Allowable =         On      Result =   PASS
+     LBand                          Value =         On      Allowable =         On      Result =   PASS
+     Lite DC                        Value =        Off      Allowable =        Off      Result =   PASS
+     Login Required                 Value =        Off      Allowable =        Off      Result =   PASS
+     Made in China                  Value =        Off      Allowable =        Off      Result =   PASS
+     Moving Base                    Value =        Off      Allowable =        Off      Result =   PASS
+     Narrow Band MSS Antenna        Value =        Off      Allowable =        Off      Result =   PASS
+     No Static CMR Input            Value =        Off      Allowable =        Off      Result =   PASS
+     No Static CMR Output           Value =        Off      Allowable =        Off      Result =   PASS
+     RSIM Output                    Value =        Off      Allowable =        Off      Result =   PASS
+     RTCM DGPSInput                 Value =        Off      Allowable =        Off      Result =   PASS
+     RTCM Inputs                    Value =        Off      Allowable =        Off      Result =   PASS
+     RTCM Outputs                   Value =        Off      Allowable =        Off      Result =   PASS
+     RTX Integrity Operation        Value =        Off      Allowable =        Off      Result =   PASS
+     Scramble CMR Output            Value =        Off      Allowable =        Off      Result =   PASS
+     Scramble CMRx Input            Value =        Off      Allowable =        Off      Result =   PASS
+     Scramble CMRx Output           Value =        Off      Allowable =        Off      Result =   PASS
+     Scramble CMRx V3               Value =        Off      Allowable =        Off      Result =   PASS
+     Sensors                        Value =        Off      Allowable =        Off      Result =   PASS
+     Set Default MUXPort to CAN     Value =        Off      Allowable =        Off      Result =   PASS
+     Spectrum Analyzer              Value =        Off      Allowable =        Off      Result =   PASS
+     Titan RTK Allowed              Value =        Off      Allowable =        Off      Result =   PASS
+     Transmit High Power            Value =        Off      Allowable =        Off      Result =   PASS
+     Twelve Channels                Value =        Off      Allowable =        Off      Result =   PASS
+     UHF Transmit                   Value =        Off      Allowable =        Off      Result =   PASS
+     WiFi                           Value =        Off      Allowable =        Off      Result =   PASS
+     Brand                          Value =    Not Set      Allowable =    Not Set      Result =   PASS
+     CenterPoint End                Value =    Not Set      Allowable =    Not Set      Result =   PASS
+     CenterPoint Start              Value =    Not Set      Allowable =    Not Set      Result =   PASS
+     DGaaS ID                       Value =      65535      Allowable =      65535      Result =   PASS
+     Downgrade Limit                Value =        520      Allowable =        520      Result =   PASS
+     Extended Receiver ID           Value =      65535      Allowable =      65535      Result =   PASS
+     External IMU Mode              Value =        255      Allowable =        255      Result =   PASS
+     FieldPoint End                 Value =    Not Set      Allowable =    Not Set      Result =   PASS
+     FieldPoint Start               Value =    Not Set      Allowable =    Not Set      Result =   PASS
+     Firmware Option                Value =     7/2026      Allowable =     7/2026      Result =   PASS
+     ForcePort0                     Value =        255      Allowable =        255      Result =   PASS
+     ForcePort1                     Value =        255      Allowable =        255      Result =   PASS
+     ForcePort2                     Value =        255      Allowable =        255      Result =   PASS
+     GeoFence0                      Value =        255      Allowable =        255      Result =   PASS
+     GeoFence1                      Value =        255      Allowable =        255      Result =   PASS
+     GeoFence2                      Value =        255      Allowable =        255      Result =   PASS
+     HTTPS Mode                     Value =        255      Allowable =        255      Result =   PASS
+     INS Dynamic Models             Value = 4294967295      Allowable = 4294967295      Result =   PASS
+     LocationRTK                    Value =        255      Allowable =        255      Result =   PASS
+     Log Memory Limit               Value =    Not Set      Allowable =    Not Set      Result =   PASS
+     Max Data Rate                  Value =       20Hz      Allowable =       20Hz      Result =   PASS
+     Pitch Roll Precision           Value =        255      Allowable =        255      Result =   PASS
+     PP GeoFence0                   Value =        255      Allowable =        255      Result =   PASS
+     PP GeoFence1                   Value =        255      Allowable =        255      Result =   PASS
+     PP GeoFence2                   Value =        255      Allowable =        255      Result =   PASS
+     RangePoint End                 Value =    Not Set      Allowable =    Not Set      Result =   PASS
+     RangePoint Start               Value =    Not Set      Allowable =    Not Set      Result =   PASS
+     Receiver ID                    Value =          0      Allowable =          0      Result =   PASS
+     RTK Range Limit                Value =      65535      Allowable =      65535      Result =   PASS
+     RTK Test Options               Value =        255      Allowable =        255      Result =   PASS
+     RTX Fast End                   Value =    Not Set      Allowable =    Not Set      Result =   PASS
+     RTX Fast Start                 Value =    Not Set      Allowable =    Not Set      Result =   PASS
+     RTX Fence Controls             Value =      65535      Allowable =      65535      Result =   PASS
+     RTX Hours Purchased            Value =      65535      Allowable =      65535      Result =   PASS
+     RTX PosPac End                 Value =    Not Set      Allowable =    Not Set      Result =   PASS
+     RTX PosPac Feature             Value =        255      Allowable =        255      Result =   PASS
+     RTX PosPac Start               Value =    Not Set      Allowable =    Not Set      Result =   PASS
+     ViewPoint End                  Value =    Not Set      Allowable =    Not Set      Result =   PASS
+     ViewPoint Start                Value =    Not Set      Allowable =    Not Set      Result =   PASS
+     WiFi Country Code              Value =        255      Allowable =        255      Result =   PASS
+     xFill End                      Value =    Not Set      Allowable =    Not Set      Result =   PASS
+     xFill Start                    Value =    Not Set      Allowable =    Not Set      Result =   PASS
+
+Update Firmware: DISABLED
+     Test is disabled.
+
+Frequency Conversion Test: PASS
+Antenna 0
+     LG1NB   FFTDelta     =   1002     Allowable     <  35000     Result = PASS
+     LG2     FFTDelta     =      3     Allowable     <  35000     Result = PASS
+     LE5     FFTDelta     =      9     Allowable     <  35000     Result = PASS
+     B1      FFTDelta     =     22     Allowable     <  35000     Result = PASS
+     E6      FFTDelta     =     31     Allowable     <  35000     Result = PASS
+     LG2NB   FFTDelta     =     13     Allowable     <  35000     Result = PASS
+     MSS     FFTDelta     =    443     Allowable     <  10000     Result = PASS
+
+AGC Test: PASS
+Antenna 0
+     LG1_0dB   DACQRead     = 17.47     Allowable     = 17.40 +/-  1.00   Result = PASS
+     LG1_0dB   DACIRead     = 17.43     Allowable     = 17.40 +/-  1.00   Result = PASS
+     LG1_0dB   DACQSign     = 50.40     Allowable     = 50.00 +/-  1.00   Result = PASS
+     LG1_0dB   DACISign     = 49.72     Allowable     = 50.00 +/-  1.00   Result = PASS
+     LG1_0dB   AGC_0dB     =  0.51 
+     LG1_60dB   DACQRead     = 17.37     Allowable     = 17.40 +/-  1.00   Result = PASS
+     LG1_60dB   DACIRead     = 17.52     Allowable     = 17.40 +/-  1.00   Result = PASS
+     LG1_60dB   AGC_60dB     =  1.23 
+     LG1        AGCDelta     = 0.719     Allowable     > 0.344             Result = PASS
+
+     LG2_0dB   DACQRead     = 17.51     Allowable     = 17.40 +/-  1.00   Result = PASS
+     LG2_0dB   DACIRead     = 17.40     Allowable     = 17.40 +/-  1.00   Result = PASS
+     LG2_0dB   DACQSign     = 50.35     Allowable     = 50.00 +/-  1.00   Result = PASS
+     LG2_0dB   DACISign     = 50.26     Allowable     = 50.00 +/-  1.00   Result = PASS
+     LG2_0dB   AGC_0dB     =  0.54 
+     LG2_60dB   DACQRead     = 17.51     Allowable     = 17.40 +/-  1.00   Result = PASS
+     LG2_60dB   DACIRead     = 17.40     Allowable     = 17.40 +/-  1.00   Result = PASS
+     LG2_60dB   AGC_60dB     =  1.18 
+     LG2        AGCDelta     = 0.643     Allowable     > 0.344             Result = PASS
+
+     E5_0dB   DACQRead     = 17.44     Allowable     = 17.40 +/-  1.00   Result = PASS
+     E5_0dB   DACIRead     = 17.52     Allowable     = 17.40 +/-  1.00   Result = PASS
+     E5_0dB   DACQSign     = 50.12     Allowable     = 50.00 +/-  1.00   Result = PASS
+     E5_0dB   DACISign     = 49.59     Allowable     = 50.00 +/-  1.00   Result = PASS
+     E5_0dB   AGC_0dB     =  0.96 
+     E5_60dB   DACQRead     = 17.44     Allowable     = 17.40 +/-  1.00   Result = PASS
+     E5_60dB   DACIRead     = 17.43     Allowable     = 17.40 +/-  1.00   Result = PASS
+     E5_60dB   AGC_60dB     =  1.31 
+     E5        AGCDelta     = 0.355     Allowable     > 0.344             Result = PASS
+
+     B1_0dB   DACQRead     = 17.43     Allowable     = 17.40 +/-  1.00   Result = PASS
+     B1_0dB   DACIRead     = 17.55     Allowable     = 17.40 +/-  1.00   Result = PASS
+     B1_0dB   DACQSign     = 50.00     Allowable     = 50.00 +/-  1.00   Result = PASS
+     B1_0dB   DACISign     = 49.65     Allowable     = 50.00 +/-  1.00   Result = PASS
+     B1_0dB   AGC_0dB     =  0.51 
+     B1_60dB   DACQRead     = 17.43     Allowable     = 17.40 +/-  1.00   Result = PASS
+     B1_60dB   DACIRead     = 17.45     Allowable     = 17.40 +/-  1.00   Result = PASS
+     B1_60dB   AGC_60dB     =  1.24 
+     B1        AGCDelta     = 0.733     Allowable     > 0.344             Result = PASS
+
+     E6_0dB   DACQRead     = 17.35     Allowable     = 17.40 +/-  1.00   Result = PASS
+     E6_0dB   DACIRead     = 17.50     Allowable     = 17.40 +/-  1.00   Result = PASS
+     E6_0dB   DACQSign     = 50.42     Allowable     = 50.00 +/-  1.00   Result = PASS
+     E6_0dB   DACISign     = 49.86     Allowable     = 50.00 +/-  1.00   Result = PASS
+     E6_0dB   AGC_0dB     =  0.46 
+     E6_60dB   DACQRead     = 17.35     Allowable     = 17.40 +/-  1.00   Result = PASS
+     E6_60dB   DACIRead     = 17.50     Allowable     = 17.40 +/-  1.00   Result = PASS
+     E6_60dB   AGC_60dB     =  1.05 
+     E6        AGCDelta     = 0.586     Allowable     > 0.344             Result = PASS
+
+     MSS      AGCGain_0dB  = 1.502     Allowable     = 1.500 +/- 0.300   Result = PASS
+     MSS      AGCGain_60dB  = 1.496     Allowable     = 1.500 +/- 0.300	  Result = PASS
+
+Front End Gain Test: PASS
+Antenna 0
+     LG1NB   JAMDET             = 1.806     Allowable     > 1.4V                    Result = PASS
+     LG2     JAMDET             = 1.813     Allowable     > 1.4V                    Result = PASS
+     LG2NB   JAMDET             = 1.809     Allowable     > 1.4V                    Result = PASS
+     LE5     JAMDET             = 1.823     Allowable     > 1.4V                    Result = PASS
+     E6      JAMDET             = 1.809     Allowable     > 1.4V                    Result = PASS
+     B1      JAMDET             = 1.813     Allowable     > 1.4V                    Result = PASS
+     MSS     JAMDET             = 1.806     Allowable     > 1.4V                    Result = PASS
+
+AMTV Test: PASS
+Antenna 0
+     LG2     SigDet1225_LowDetSel     =  0.71     Allowable     >  0.50V     Result = PASS
+     LG2     SigDet1248_LowDetSel     =  0.21     Allowable     <  0.38V     Result = PASS
+     LG2     SigDet1248_HighDetSel    =  0.94     Allowable     >  0.60V     Result = PASS
+
+Band Flatness  Test: PASS
+Antenna 0
+     LG1NB   FlatnessDelta     =  2.34     Allowable     <  3.30     Result = PASS
+     LG2     FlatnessDelta     =  1.64     Allowable     <  3.30     Result = PASS
+     E5      FlatnessDelta     =  2.46     Allowable     <  3.30     Result = PASS
+     B1      FlatnessDelta     =  0.96     Allowable     <  3.30     Result = PASS
+     E6      FlatnessDelta     =  2.38     Allowable     <  3.30     Result = PASS
+     LG2NB   FlatnessDelta     =  0.81     Allowable     <  3.30     Result = PASS
+
+Save Test Result to Receiver: PASS
+     Value = Saved     Allowable = Saved     Result = PASS
+
+Test Results Written to Receiver:
+     PASS;RUN,06/18/2026 09:15;PRG, 1.00.74;CFG, 4.00;SN,          26201048;PN, 000000-00;STN,A;SITE,K:3D;DES,R980,            RFPERF
+Reset To Factory test: PASS
+     Value = Pass     Allowable = Pass     Result = PASS

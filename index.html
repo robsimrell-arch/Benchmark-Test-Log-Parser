@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benchmark Test Log Parser</title>
+    <!-- Outfit Font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar / Header Area -->
+        <header class="main-header">
+            <div class="logo-area">
+                <div class="brand-row">
+                    <div class="brand-logo-wrap">
+                        <img src="benchmark_logo.png" alt="Benchmark Logo" class="brand-logo">
+                    </div>
+                    <div class="pulse-dot"></div>
+                </div>
+                <h1 id="app-title">Benchmark Test Log Parser</h1>
+            </div>
+            <div class="dir-picker-card">
+                <div class="picker-row">
+                    <div class="picker-field parser-select-field">
+                        <p class="section-label">Active Parser</p>
+                        <select id="parser-select" class="parser-dropdown">
+                            <option value="trimble">Trimble Parser</option>
+                            <option value="siemens">Siemens Parser</option>
+                        </select>
+                    </div>
+                    <div class="picker-field dir-field">
+                        <p class="section-label">Target Directory</p>
+                        <div class="picker-input-group">
+                            <input type="text" id="parent-dir-input" placeholder="Select a parent folder..." readonly>
+                            <button id="select-dir-btn" class="btn-primary">Browse</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button id="scan-btn" class="btn-success" disabled>Scan Directory</button>
+                    <button id="export-btn" class="btn-secondary" disabled>Export View</button>
+                    <button id="failure-view-btn" class="btn-warning" disabled>Failure Data</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- KPI Section -->
+            <section class="kpi-grid">
+                <div class="kpi-card" id="kpi-total">
+                    <h3>Total Tests</h3>
+                    <div class="value">0</div>
+                    <div class="subtext">Parsed logs</div>
+                </div>
+                <div class="kpi-card success" id="kpi-pass">
+                    <h3>Passed Runs</h3>
+                    <div class="value">0</div>
+                    <div class="subtext">0% Success Rate</div>
+                </div>
+                <div class="kpi-card danger" id="kpi-fail">
+                    <h3>Failed Runs</h3>
+                    <div class="value">0</div>
+                    <div class="subtext">0% Failure Rate</div>
+                </div>
+                <div class="kpi-card info" id="kpi-unique">
+                    <h3>Unique Serials</h3>
+                    <div class="value">0</div>
+                    <div class="subtext">Tested devices</div>
+                </div>
+            </section>
+
+            <!-- Search & Filters Panel -->
+            <section class="filters-panel">
+                <div class="search-group">
+                    <div class="search-box">
+                        <label for="global-search">Global Search</label>
+                        <input type="text" id="global-search" placeholder="Search any column (Part, Serial, Date, Customer)...">
+                    </div>
+                    <div class="search-box warning">
+                        <div class="search-box-header">
+                            <label for="diagnostic-search">Failing Step Search (Diagnostic)</label>
+                            <div class="filter-option">
+                                <input type="checkbox" id="filter-diagnostic-check">
+                                <label for="filter-diagnostic-check">Filter by matches</label>
+                            </div>
+                        </div>
+                        <input type="text" id="diagnostic-search" placeholder="Highlight runs with matching failed step (e.g. R88)...">
+                    </div>
+                </div>
+                <div class="filters-footer-row">
+                    <div class="date-range-row">
+                        <div class="date-range-group">
+                            <label for="date-from">From</label>
+                            <input type="datetime-local" id="date-from">
+                        </div>
+                        <span class="date-range-sep">→</span>
+                        <div class="date-range-group">
+                            <label for="date-to">To</label>
+                            <input type="datetime-local" id="date-to">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-option filter-option-danger">
+                        <input type="checkbox" id="filter-never-passed-check">
+                        <label for="filter-never-passed-check">Never Passed Only</label>
+                    </div>
+                    
+                    <button id="clear-filters-btn" class="btn-secondary">
+                        <span class="btn-icon">↺</span> Clear Filters
+                    </button>
+                </div>
+            </section>
+
+            <!-- Data Table Section -->
+            <section class="table-container">
+                <table id="logs-table">
+                    <thead>
+                        <tr>
+                            <th data-column="date_time">
+                                <div class="th-content">
+                                    <span class="th-title">Date/Time</span>
+                                    <span class="sort-icon"></span>
+                                </div>
+                                <input type="text" class="column-filter" placeholder="Filter date..." onclick="event.stopPropagation()">
+                            </th>
+                            <th data-column="part_number">
+                                <div class="th-content">
+                                    <span class="th-title">Part Number</span>
+                                    <span class="sort-icon"></span>
+                                </div>
+                                <select class="column-filter" id="part-number-filter" onclick="event.stopPropagation()">
+                                    <option value="">All Parts</option>
+                                </select>
+                            </th>
+                            <th data-column="serial">
+                                <div class="th-content">
+                                    <span class="th-title">Serial Number</span>
+                                    <span class="sort-icon"></span>
+                                </div>
+                                <input type="text" class="column-filter" placeholder="Filter serial..." onclick="event.stopPropagation()">
+                            </th>
+                            <th data-column="status">
+                                <div class="th-content">
+                                    <span class="th-title">Pass/Fail</span>
+                                    <span class="sort-icon"></span>
+                                </div>
+                                <input type="text" class="column-filter" placeholder="Filter status..." onclick="event.stopPropagation()">
+                            </th>
+                            <th data-column="cumulative_tests">
+                                <div class="th-content">
+                                    <span class="th-title">Cumulative Tests</span>
+                                    <span class="sort-icon"></span>
+                                </div>
+                                <input type="text" class="column-filter" placeholder="Filter count..." onclick="event.stopPropagation()">
+                            </th>
+                            <th class="th-actions" style="width: 120px; text-align: center; cursor: default;">
+                                <div class="th-content" style="justify-content: center;">
+                                    <span class="th-title">Actions</span>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="logs-tbody">
+                        <tr>
+                            <td colspan="6" class="empty-state">No directory scanned. Select a parent folder to begin.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Pagination Control -->
+            <div class="pagination-container">
+                <div class="pagination-info">Showing <span id="page-start">0</span> to <span id="page-end">0</span> of <span id="total-rows">0</span> entries</div>
+                <div class="pagination-buttons">
+                    <button id="prev-page-btn" class="btn-pagination" disabled>&larr; Previous</button>
+                    <span id="page-num">1</span>
+                    <button id="next-page-btn" class="btn-pagination" disabled>Next &rarr;</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Failure Data View -->
+        <section id="failure-view" class="failure-view" style="display:none;">
+            <div class="failure-view-header">
+                <button id="back-to-main-btn" class="btn-secondary">&larr; Back to Log View</button>
+                <h2 class="failure-view-title">Failure Step Analysis <span class="failure-view-sub">by Part Number</span></h2>
+                <div class="failure-date-range">
+                    <div class="date-range-group">
+                        <label for="failure-date-from">From</label>
+                        <input type="datetime-local" id="failure-date-from">
+                    </div>
+                    <span class="date-range-sep">&rarr;</span>
+                    <div class="date-range-group">
+                        <label for="failure-date-to">To</label>
+                        <input type="datetime-local" id="failure-date-to">
+                    </div>
+                    <button id="failure-clear-dates-btn" class="btn-secondary btn-sm">Clear</button>
+                </div>
+            </div>
+            <div id="failure-parts-container">
+                <div class="empty-state" style="padding:60px;">Scan a directory first, then switch to Failure Data view.</div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Details Modal -->
+    <div class="modal-backdrop" id="details-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <h2 id="modal-title">Test Run Details</h2>
+                    <p id="modal-subtitle">Serial Number: <span id="modal-serial-val">-</span></p>
+                </div>
+                <div class="modal-header-actions">
+                    <button class="btn-barcode" id="barcode-toggle-btn" title="Generate QR Barcode">&#x25A6; Barcode</button>
+                    <button class="modal-close-btn" id="close-modal-btn">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-meta-grid">
+                    <div class="meta-item">
+                        <span class="meta-label">Customer</span>
+                        <span class="meta-value" id="meta-customer">-</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Part Number (L1)</span>
+                        <span class="meta-value" id="meta-part-l1">-</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Date / Time</span>
+                        <span class="meta-value" id="meta-datetime">-</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Global Status</span>
+                        <span class="meta-value badge" id="meta-status">-</span>
+                    </div>
+                </div>
+
+                <div class="modal-search-box">
+                    <input type="text" id="modal-step-search" placeholder="Search individual test steps...">
+                    <div class="filter-option filter-option-danger" style="flex-shrink: 0; padding-bottom: 0;">
+                        <input type="checkbox" id="modal-fail-only-check">
+                        <label for="modal-fail-only-check">Failed results only</label>
+                    </div>
+                </div>
+
+                <div class="modal-table-container" id="steps-view">
+                    <table id="steps-table">
+                        <thead>
+                            <tr>
+                                <th>Test Step</th>
+                                <th>Low Limit</th>
+                                <th>High Limit</th>
+                                <th>Expected</th>
+                                <th>Measured</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody id="steps-tbody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Barcode View (hidden by default) -->
+                <div class="barcode-view" id="barcode-view" style="display:none;">
+                    <div class="barcode-loading" id="barcode-loading">Generating QR code…</div>
+                    <div class="barcode-content" id="barcode-content" style="display:none;">
+                        <pre class="barcode-text-block" id="barcode-text-block"></pre>
+                        <div class="barcode-qr-wrap">
+                            <img id="barcode-qr-img" src="" alt="QR Code" class="barcode-qr-img">
+                        </div>
+                    </div>
+                    <div class="barcode-error" id="barcode-error" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Right-Click Context Menu -->
+    <div id="custom-context-menu" class="context-menu">
+        <div class="context-menu-item" id="ctx-copy">Copy Cell Value</div>
+        <div class="context-menu-item" id="ctx-filter">Filter by Selection</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

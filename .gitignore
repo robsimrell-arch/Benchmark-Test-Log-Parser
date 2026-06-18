@@ -1,0 +1,18 @@
+# PyInstaller & Build artifacts
+build/
+dist/
+*.spec
+
+# Python cache and bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Local configurations
+config.json
+
+# System files
+.DS_Store
+Thumbs.db
