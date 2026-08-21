@@ -6,11 +6,13 @@ from concurrent.futures import ThreadPoolExecutor
 from base_parser import BaseParser
 
 class TrimbleParser(BaseParser):
-    def scan_directory(self, parent_path):
+    def scan_directory(self, parent_path, progress_callback=None, force_rescan=False):
         """Scans the directory tree for Trimble txt logs and returns a list of parsed runs."""
         if not parent_path or not os.path.exists(parent_path):
             return []
             
+        from scan_cache import ScanCache
+        cache = ScanCache(parent_path, "trimble", force_rescan)
         runs = []
         try:
             p1_items = os.listdir(parent_path)
@@ -20,6 +22,7 @@ class TrimbleParser(BaseParser):
 
         # Find all log/txt files and extract metadata
         files_to_parse = []  # list of (meta, f_path) for FAIL runs
+        all_candidate_paths = []
         
         for p1 in p1_items:
             p1_path = os.path.join(parent_path, p1)
@@ -37,6 +40,14 @@ class TrimbleParser(BaseParser):
                     continue
                     
                 f_path = os.path.join(p1_path, f)
+                all_candidate_paths.append(f_path)
+
+                # Check cache first
+                cached_runs = cache.get_cached_runs(f_path)
+                if cached_runs is not None:
+                    runs.extend(cached_runs)
+                    continue
+
                 meta = self._parse_run_name(f)
                 if not meta:
                     continue
@@ -53,6 +64,7 @@ class TrimbleParser(BaseParser):
                 else:
                     meta["steps"] = []
                     runs.append(meta)
+                    cache.update_file(f_path, [meta])
 
         # Parse FAIL runs in parallel
         if files_to_parse:
@@ -66,11 +78,21 @@ class TrimbleParser(BaseParser):
                     print(f"Error parsing steps for {f_path}: {e}")
                     steps = []
                 meta["steps"] = steps
-                return meta
+                return meta, f_path
 
+            completed = 0
+            total = len(files_to_parse)
             with ThreadPoolExecutor() as executor:
-                parsed_fail_runs = list(executor.map(parse_one, files_to_parse))
-            runs.extend(parsed_fail_runs)
+                results = executor.map(parse_one, files_to_parse)
+                for meta, f_path in results:
+                    runs.append(meta)
+                    cache.update_file(f_path, [meta])
+                    completed += 1
+                    if progress_callback:
+                        progress_callback(completed, total, f"Parsed failed log {completed}/{total}: {os.path.basename(f_path)}")
+
+        # Save cache
+        cache.clean_and_save(all_candidate_paths)
                 
         # Calculate cumulative tests per serial number
         serial_counts = {}

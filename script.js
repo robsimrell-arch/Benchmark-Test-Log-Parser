@@ -8,7 +8,10 @@ const pageSize = 15;
 let activeFilters = {
     date_time: '',
     part_number: '',
+    program_name: '',
     serial: '',
+    board_side: '',
+    tester: '',
     status: '',
     cumulative_tests: ''
 };
@@ -23,9 +26,13 @@ const selectDirBtn = document.getElementById('select-dir-btn');
 const parentDirInput = document.getElementById('parent-dir-input');
 const parserSelect = document.getElementById('parser-select');
 const scanBtn = document.getElementById('scan-btn');
+const forceScanBtn = document.getElementById('force-scan-btn');
 const exportBtn = document.getElementById('export-btn');
 const failureViewBtn = document.getElementById('failure-view-btn');
 const logsTbody = document.getElementById('logs-tbody');
+const scanProgressContainer = document.getElementById('scan-progress-container');
+const scanProgressBar = document.getElementById('scan-progress-bar');
+const scanProgressText = document.getElementById('scan-progress-text');
 
 // KPIs
 const kpiTotalVal = document.querySelector('#kpi-total .value');
@@ -34,6 +41,8 @@ const kpiPassSub = document.querySelector('#kpi-pass .subtext');
 const kpiFailVal = document.querySelector('#kpi-fail .value');
 const kpiFailSub = document.querySelector('#kpi-fail .subtext');
 const kpiUniqueVal = document.querySelector('#kpi-unique .value');
+const kpiFpyVal = document.querySelector('#kpi-fpy .value');
+const kpiFpySub = document.querySelector('#kpi-fpy .subtext');
 
 // Search & Pagination Elements
 const globalSearchInput = document.getElementById('global-search');
@@ -81,6 +90,7 @@ window.addEventListener('pywebviewready', async () => {
         const lastParser = await window.pywebview.api.get_last_parser();
         if (lastParser) {
             parserSelect.value = lastParser;
+            updateColumnsVisibility();
         }
     } catch (err) {
         console.error('Error loading last parser:', err);
@@ -90,11 +100,33 @@ window.addEventListener('pywebviewready', async () => {
         if (lastDir) {
             parentDirInput.value = lastDir;
             scanBtn.removeAttribute('disabled');
+            forceScanBtn.removeAttribute('disabled');
         }
     } catch (err) {
         console.error('Error loading last directory:', err);
     }
 });
+
+function updateColumnsVisibility() {
+    const isFlyingProbe = parserSelect.value === 'flying_probe';
+    document.querySelectorAll('.flying-probe-only').forEach(el => {
+        el.style.display = isFlyingProbe ? '' : 'none';
+    });
+}
+
+function getColspan() {
+    return parserSelect.value === 'flying_probe' ? 9 : 6;
+}
+
+window.updateScanProgress = function(current, total, message) {
+    if (total > 0) {
+        const percent = Math.round((current / total) * 100);
+        scanProgressBar.style.width = `${percent}%`;
+    } else {
+        scanProgressBar.style.width = '0%';
+    }
+    scanProgressText.textContent = message || 'Scanning...';
+};
 
 // Event Listeners
 selectDirBtn.addEventListener('click', async () => {
@@ -103,6 +135,7 @@ selectDirBtn.addEventListener('click', async () => {
         if (path) {
             parentDirInput.value = path;
             scanBtn.removeAttribute('disabled');
+            forceScanBtn.removeAttribute('disabled');
         }
     } catch (err) {
         console.error('Error selecting directory:', err);
@@ -112,6 +145,7 @@ selectDirBtn.addEventListener('click', async () => {
 parserSelect.addEventListener('change', async () => {
     try {
         await window.pywebview.api.set_active_parser(parserSelect.value);
+        updateColumnsVisibility();
         resetData();
     } catch (err) {
         console.error('Error setting active parser:', err);
@@ -151,16 +185,27 @@ function resetData() {
     failureViewBtn.setAttribute('disabled', 'true');
 }
 
-scanBtn.addEventListener('click', async () => {
+async function performScan(forceRescan) {
     const path = parentDirInput.value;
     if (!path) return;
 
     scanBtn.setAttribute('disabled', 'true');
-    scanBtn.textContent = 'Scanning...';
-    logsTbody.innerHTML = `<tr><td colspan="6" class="empty-state">Scanning directory tree... please wait.</td></tr>`;
+    forceScanBtn.setAttribute('disabled', 'true');
+    
+    if (forceRescan) {
+        forceScanBtn.textContent = 'Scanning...';
+    } else {
+        scanBtn.textContent = 'Scanning...';
+    }
+    
+    logsTbody.innerHTML = `<tr><td colspan="${getColspan()}" class="empty-state">Scanning directory tree... please wait.</td></tr>`;
+    
+    // Reset and show progress bar
+    if (window.updateScanProgress) window.updateScanProgress(0, 100, 'Starting scan...');
+    scanProgressContainer.style.display = 'block';
 
     try {
-        const results = await window.pywebview.api.scan_directory(path);
+        const results = await window.pywebview.api.scan_directory(path, forceRescan);
         allData = results || [];
         updatePartNumberDropdown(allData);
         filteredData = [...allData];
@@ -178,12 +223,18 @@ scanBtn.addEventListener('click', async () => {
         }
     } catch (err) {
         console.error('Error scanning directory:', err);
-        logsTbody.innerHTML = `<tr><td colspan="6" class="empty-state" style="color:var(--color-fail)">Scan failed: ${err.message || err}</td></tr>`;
+        logsTbody.innerHTML = `<tr><td colspan="${getColspan()}" class="empty-state" style="color:var(--color-fail)">Scan failed: ${err.message || err}</td></tr>`;
     } finally {
         scanBtn.removeAttribute('disabled');
-        scanBtn.textContent = 'Scan Directory';
+        forceScanBtn.removeAttribute('disabled');
+        scanBtn.textContent = 'Quick Scan';
+        forceScanBtn.textContent = 'Force Full Rescan';
+        scanProgressContainer.style.display = 'none';
     }
-});
+}
+
+scanBtn.addEventListener('click', () => performScan(false));
+forceScanBtn.addEventListener('click', () => performScan(true));
 
 exportBtn.addEventListener('click', async () => {
     if (filteredData.length === 0) return;
@@ -192,7 +243,10 @@ exportBtn.addEventListener('click', async () => {
         const exportList = filteredData.map(d => ({
             date_time: d.date_time,
             part_number: d.part_number,
+            program_name: d.program_name,
             serial: d.serial,
+            board_side: d.board_side,
+            tester: d.tester,
             status: d.status,
             cumulative_tests: d.cumulative_tests,
             customer: d.customer,
@@ -445,6 +499,40 @@ function updateKPIs() {
     kpiFailSub.textContent = `${failRate}% Failure Rate`;
 
     kpiUniqueVal.textContent = uniqueSerials;
+
+    // FPY logic: Group ALL runs by serial number to find the absolute first run for each device
+    const allSerialGroups = {};
+    allData.forEach(run => {
+        const s = run.serial;
+        if (!allSerialGroups[s]) {
+            allSerialGroups[s] = [];
+        }
+        allSerialGroups[s].push(run);
+    });
+
+    const absoluteFirstRunsMap = {};
+    for (const s in allSerialGroups) {
+        const runs = allSerialGroups[s];
+        // Sort ascending (earliest first). YYYY-MM-DD HH:MM compares lexicographically.
+        runs.sort((a, b) => a.date_time.localeCompare(b.date_time));
+        absoluteFirstRunsMap[s] = runs[0];
+    }
+
+    // Determine the unique serial numbers active in the current filtered data
+    const activeSerials = new Set(filteredData.map(run => run.serial));
+
+    let firstPassSuccesses = 0;
+    activeSerials.forEach(s => {
+        const firstRun = absoluteFirstRunsMap[s];
+        if (firstRun && firstRun.status === 'PASS') {
+            firstPassSuccesses++;
+        }
+    });
+
+    const totalUnique = activeSerials.size;
+    const fpy = totalUnique > 0 ? Math.round((firstPassSuccesses / totalUnique) * 100) : 0;
+    kpiFpyVal.textContent = `${fpy}%`;
+    kpiFpySub.textContent = `${firstPassSuccesses} of ${totalUnique} serials`;
 }
 
 function applyFiltersAndRender() {
@@ -453,7 +541,10 @@ function applyFiltersAndRender() {
         const fieldsToSearch = [
             item.date_time,
             item.part_number,
+            item.program_name,
             item.serial,
+            item.board_side,
+            item.tester,
             item.status,
             item.customer,
             item.part_num_3rd,
@@ -495,10 +586,10 @@ function applyFiltersAndRender() {
         return true;
     });
 
-    // 5. Never Passed Only — two-pass: find serials with ≥1 PASS among candidates, then exclude
+    // 5. Never Passed Only — two-pass: find serials with ≥1 PASS across all scanned data, then exclude
     if (filterNeverPassedCheck.checked) {
         const passedSerials = new Set(
-            filteredData.filter(r => r.status === 'PASS').map(r => r.serial)
+            allData.filter(r => r.status === 'PASS').map(r => r.serial)
         );
         filteredData = filteredData.filter(r => !passedSerials.has(r.serial));
     }
@@ -544,11 +635,12 @@ function updateSortIcons() {
 function renderTable() {
     logsTbody.innerHTML = '';
     
+    const isFlyingProbe = parserSelect.value === 'flying_probe';
     const total = filteredData.length;
     totalRowsSpan.textContent = total;
 
     if (total === 0) {
-        logsTbody.innerHTML = `<tr><td colspan="6" class="empty-state">No matching test runs found.</td></tr>`;
+        logsTbody.innerHTML = `<tr><td colspan="${getColspan()}" class="empty-state">No matching test runs found.</td></tr>`;
         pageStartSpan.textContent = '0';
         pageEndSpan.textContent = '0';
         prevPageBtn.setAttribute('disabled', 'true');
@@ -606,10 +698,25 @@ function renderTable() {
             }
         }
 
-        tr.innerHTML = `
+        let colsHtml = `
             <td>${item.date_time}</td>
             <td>${item.part_number}</td>
+        `;
+        if (isFlyingProbe) {
+            colsHtml += `
+                <td>${item.program_name || ''}</td>
+            `;
+        }
+        colsHtml += `
             <td>${item.serial}</td>
+        `;
+        if (isFlyingProbe) {
+            colsHtml += `
+                <td>${item.board_side || ''}</td>
+                <td>${item.tester || ''}</td>
+            `;
+        }
+        colsHtml += `
             <td><span class="badge ${item.status.toLowerCase()}">${item.status}</span></td>
             <td style="text-align: center; font-weight: 500;">${item.cumulative_tests}</td>
             <td style="text-align: center;">
@@ -619,6 +726,7 @@ function renderTable() {
                 </div>
             </td>
         `;
+        tr.innerHTML = colsHtml;
 
         // Programmatically bind open explorer click handler
         const explorerBtn = tr.querySelector('.btn-explorer');
@@ -681,7 +789,7 @@ async function showDetails(item) {
     if (!item.steps || item.steps.length === 0) {
         stepsTbody.innerHTML = `<tr><td colspan="6" class="empty-state">Loading steps data...</td></tr>`;
         try {
-            const steps = await window.pywebview.api.get_run_steps(item.path);
+            const steps = await window.pywebview.api.get_run_steps(item.path, item.serial, item.date_time);
             item.steps = steps || [];
         } catch (err) {
             console.error('Error loading run steps:', err);
@@ -799,15 +907,46 @@ document.addEventListener('click', () => {
     contextMenu.style.display = 'none';
 });
 
+function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            console.log('Value copied to clipboard:', text);
+        }).catch(err => {
+            console.warn('Clipboard writeText failed, trying fallback:', err);
+            fallbackCopyToClipboard(text);
+        });
+    } else {
+        fallbackCopyToClipboard(text);
+    }
+}
+
+function fallbackCopyToClipboard(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            console.log('Value copied to clipboard via fallback');
+        } else {
+            console.error('Fallback copy command was unsuccessful');
+        }
+    } catch (err) {
+        console.error('Fallback copy failed:', err);
+    }
+    document.body.removeChild(textArea);
+}
+
 // Copy Value Option
 ctxCopy.addEventListener('click', () => {
     if (activeRightClickCell) {
         const text = activeRightClickCell.textContent.trim();
-        navigator.clipboard.writeText(text).then(() => {
-            console.log('Value copied to clipboard:', text);
-        }).catch(err => {
-            console.error('Clipboard copy failed:', err);
-        });
+        copyToClipboard(text);
     }
 });
 

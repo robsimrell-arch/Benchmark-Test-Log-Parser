@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 class BaseParser(ABC):
     @abstractmethod
-    def scan_directory(self, parent_path):
+    def scan_directory(self, parent_path, progress_callback=None, force_rescan=False):
         """
         Scans the given directory tree for runs and returns a list of run dictionaries.
         Each run dictionary must contain:

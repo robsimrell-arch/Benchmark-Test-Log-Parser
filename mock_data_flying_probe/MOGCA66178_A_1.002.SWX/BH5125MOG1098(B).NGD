@@ -1,0 +1,53 @@
+@
+* FAIL *
+
+Model:MOGCA66178_A_1.002.SWX (B)
+DATE 02/11/26 19:08:21
+
+Test time:56 s
+Test ID :TAKAYA-B
+User name :bakerlo
+@
+
+* GROUP No.1   *
+* FAIL *
+Serial No.:BH5125MOG1098
+
+000139 "R101*      " "5O         " "MOGM55342K09B10D0R  " "40.95 O  " "409.5 KO " "OPEN   " "1.0 ms" "( +, -, N, N) "    56
+000323 "R102       " "3.32KO     " "MOGD55342K07B3E32R  " "4.095 KO " "10.27 MO " "OPEN   " "200.0 ms" "( -,G1, N, +) "    56
+@
+@
+* FAIL *
+
+Model:MOGCA66178_A_1.002.SWX (B)
+DATE 02/12/26 07:42:33
+
+Test time:103 s
+Test ID :TAKAYA-B
+User name :Administrator
+@
+
+* GROUP No.1   *
+* FAIL *
+Serial No.:BH5125MOG1098
+
+000139 "R101*      " "5O         " "MOGM55342K09B10D0R  " "40.95 O  " "409.5 KO " "OPEN   " "1.0 ms" "( +, -, N, N) "   103
+000323 "R102       " "3.32KO     " "MOGD55342K07B3E32R  " "4.095 KO " "10.40 MO " "OPEN   " "200.0 ms" "( -,G1, N, +) "   103
+@
+@
+* PASS *
+
+Model:MOGCA66178_A_1.002.SWX2 (B)
+DATE 26/03/07 08:49:29
+
+Version No. :V3.0-4e
+Test ID :Takaya D
+User name :bakerlo
+Index :CA66177.D CA9 Format (Bottom Sid
+@
+
+* GROUP No.1   *
+* PASS *
+Serial No.:BH5125MOG1098
+
+@

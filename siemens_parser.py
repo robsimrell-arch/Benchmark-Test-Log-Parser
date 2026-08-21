@@ -7,11 +7,13 @@ import io
 from base_parser import BaseParser
 
 class SiemensParser(BaseParser):
-    def scan_directory(self, parent_path):
+    def scan_directory(self, parent_path, progress_callback=None, force_rescan=False):
         """Scans the directory tree for test logs and returns a list of parsed runs."""
         if not parent_path or not os.path.exists(parent_path):
             return []
             
+        from scan_cache import ScanCache
+        cache = ScanCache(parent_path, "siemens", force_rescan)
         runs = []
         # Level 1: Part Number (e.g. TF80418)
         try:
@@ -20,66 +22,88 @@ class SiemensParser(BaseParser):
             print(f"Error reading parent path: {e}")
             return []
 
+        # Collect all candidates first to support progress reporting
+        candidates = []
         for p1 in p1_items:
             p1_path = os.path.join(parent_path, p1)
             if not os.path.isdir(p1_path):
                 continue
-                
             # Level 2: Date (e.g. Tuesday_June 09_2026)
             try:
                 p2_items = os.listdir(p1_path)
             except Exception:
                 continue
-
             for p2 in p2_items:
                 p2_path = os.path.join(p1_path, p2)
                 if not os.path.isdir(p2_path):
                     continue
-                    
                 # Level 3: Zip files, folders, or loose CSV files
                 try:
                     p3_items = os.listdir(p2_path)
                 except Exception:
                     continue
-
                 for p3 in p3_items:
                     p3_path = os.path.join(p2_path, p3)
-                    
                     is_zip = zipfile.is_zipfile(p3_path)
                     is_dir = os.path.isdir(p3_path)
                     is_csv = p3_path.lower().endswith('.csv')
+                    if is_zip or is_dir or is_csv:
+                        candidates.append((p3_path, p1, is_zip, is_dir, is_csv, p3))
+
+        total = len(candidates)
+        all_candidate_paths = [c[0] for c in candidates]
+        
+        completed = 0
+        if progress_callback and total > 0:
+            progress_callback(0, total, f"Starting scanning of {total} items...")
+
+        for p3_path, p1, is_zip, is_dir, is_csv, p3 in candidates:
+            # Check cache first
+            cached_runs = cache.get_cached_runs(p3_path)
+            if cached_runs is not None:
+                runs.extend(cached_runs)
+                completed += 1
+                if progress_callback:
+                    progress_callback(completed, total, f"Loaded from cache: {p3}")
+                continue
+
+            meta = self._parse_run_name(p3)
+            if not meta:
+                completed += 1
+                continue
+
+            # Add part number from Level 1 folder
+            meta["part_number"] = p1
+            meta["path"] = p3_path
+            meta["is_zip"] = is_zip
+
+            # Read steps eagerly
+            steps = []
+            try:
+                all_lines = []
+                if is_zip:
+                    all_lines = self._read_all_csvs_from_zip(p3_path)
+                elif is_dir:
+                    all_lines = self._read_all_csvs_from_folder(p3_path)
+                elif is_csv:
+                    all_lines = self._read_all_loose_csvs(p3_path)
                     
-                    if not (is_zip or is_dir or is_csv):
-                        continue
-                        
-                    meta = self._parse_run_name(p3)
-                    if not meta:
-                        continue
-                        
-                    # Add part number from Level 1 folder
-                    meta["part_number"] = p1
-                    meta["path"] = p3_path
-                    meta["is_zip"] = is_zip
-                    
-                    # Read steps eagerly
-                    steps = []
-                    try:
-                        all_lines = []
-                        if is_zip:
-                            all_lines = self._read_all_csvs_from_zip(p3_path)
-                        elif is_dir:
-                            all_lines = self._read_all_csvs_from_folder(p3_path)
-                        elif is_csv:
-                            all_lines = self._read_all_loose_csvs(p3_path)
-                            
-                        if all_lines:
-                            for line_set in all_lines:
-                                steps.extend(self._parse_csv_rows(line_set))
-                    except Exception as e:
-                        print(f"Error parsing steps for {p3}: {e}")
-                        
-                    meta["steps"] = steps
-                    runs.append(meta)
+                if all_lines:
+                    for line_set in all_lines:
+                        steps.extend(self._parse_csv_rows(line_set))
+            except Exception as e:
+                print(f"Error parsing steps for {p3}: {e}")
+
+            meta["steps"] = steps
+            runs.append(meta)
+            cache.update_file(p3_path, [meta])
+            
+            completed += 1
+            if progress_callback:
+                progress_callback(completed, total, f"Parsed {completed}/{total} items: {p3}")
+
+        # Save cache
+        cache.clean_and_save(all_candidate_paths)
                     
         # Consolidate/merge duplicate runs (e.g. from loose page CSV files)
         merged_runs = {}

@@ -12,6 +12,7 @@ __pycache__/
 
 # Local configurations
 config.json
+.cache/
 
 # System files
 .DS_Store

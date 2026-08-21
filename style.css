@@ -232,6 +232,14 @@ button:disabled {
     background: #059669;
 }
 
+.btn-danger {
+    background: var(--color-fail);
+    color: #fff;
+}
+.btn-danger:hover:not(:disabled) {
+    background: #dc2626;
+}
+
 .btn-secondary {
     background: rgba(255, 255, 255, 0.08);
     color: var(--text-primary);
@@ -304,6 +312,12 @@ button:disabled {
 }
 .kpi-card.info .value {
     color: var(--color-info);
+}
+.kpi-card.warning {
+    border-left: 4px solid var(--color-warn);
+}
+.kpi-card.warning .value {
+    color: var(--color-warn);
 }
 
 /* Search and Filters */

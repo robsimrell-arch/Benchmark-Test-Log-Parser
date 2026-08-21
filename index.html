@@ -28,6 +28,7 @@
                         <select id="parser-select" class="parser-dropdown">
                             <option value="trimble">Trimble Parser</option>
                             <option value="siemens">Siemens Parser</option>
+                            <option value="flying_probe">Flying Probe Parser</option>
                         </select>
                     </div>
                     <div class="picker-field dir-field">
@@ -39,9 +40,17 @@
                     </div>
                 </div>
                 <div class="action-buttons">
-                    <button id="scan-btn" class="btn-success" disabled>Scan Directory</button>
+                    <button id="scan-btn" class="btn-success" disabled>Quick Scan</button>
+                    <button id="force-scan-btn" class="btn-danger" disabled>Force Full Rescan</button>
                     <button id="export-btn" class="btn-secondary" disabled>Export View</button>
                     <button id="failure-view-btn" class="btn-warning" disabled>Failure Data</button>
+                </div>
+                <!-- Progress Indicator -->
+                <div id="scan-progress-container" style="display: none; margin-top: 15px;">
+                    <div class="progress-bar-bg" style="width: 100%; height: 8px; background-color: var(--border-color); border-radius: 4px; overflow: hidden; margin-bottom: 5px;">
+                        <div id="scan-progress-bar" style="width: 0%; height: 100%; background: var(--primary-color); transition: width 0.1s ease; border-radius: 4px;"></div>
+                    </div>
+                    <div id="scan-progress-text" style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Parsing...</div>
                 </div>
             </div>
         </header>
@@ -68,6 +77,11 @@
                     <h3>Unique Serials</h3>
                     <div class="value">0</div>
                     <div class="subtext">Tested devices</div>
+                </div>
+                <div class="kpi-card warning" id="kpi-fpy">
+                    <h3>First Pass Yield</h3>
+                    <div class="value">0%</div>
+                    <div class="subtext">First run success rate</div>
                 </div>
             </section>
 
@@ -134,12 +148,33 @@
                                     <option value="">All Parts</option>
                                 </select>
                             </th>
+                            <th data-column="program_name" class="flying-probe-only" style="display: none;">
+                                <div class="th-content">
+                                    <span class="th-title">Program Name</span>
+                                    <span class="sort-icon"></span>
+                                </div>
+                                <input type="text" class="column-filter" placeholder="Filter program..." onclick="event.stopPropagation()">
+                            </th>
                             <th data-column="serial">
                                 <div class="th-content">
                                     <span class="th-title">Serial Number</span>
                                     <span class="sort-icon"></span>
                                 </div>
                                 <input type="text" class="column-filter" placeholder="Filter serial..." onclick="event.stopPropagation()">
+                            </th>
+                            <th data-column="board_side" class="flying-probe-only" style="display: none;">
+                                <div class="th-content">
+                                    <span class="th-title">Board Side</span>
+                                    <span class="sort-icon"></span>
+                                </div>
+                                <input type="text" class="column-filter" placeholder="Filter side..." onclick="event.stopPropagation()">
+                            </th>
+                            <th data-column="tester" class="flying-probe-only" style="display: none;">
+                                <div class="th-content">
+                                    <span class="th-title">Tester/Test ID</span>
+                                    <span class="sort-icon"></span>
+                                </div>
+                                <input type="text" class="column-filter" placeholder="Filter tester..." onclick="event.stopPropagation()">
                             </th>
                             <th data-column="status">
                                 <div class="th-content">

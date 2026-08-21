@@ -1,0 +1,47 @@
+@B
+@
+Model : MOGCD34209_A_1.000
+Serial : BH1826MOG0008
+Date : 5/26/2026 2:27:50 PM
+Side: A
+Tester: APT-1400F-SL
+Operator: Administrator
+* PASS *
+@
+@E
+@B
+@
+Model : MOGCD34209_A_1.000
+Serial : BH1826MOG0008
+Date : 5/26/2026 2:29:29 PM
+Side: B
+Tester: APT-1400F-SL
+Operator: Administrator
+* FAIL *
+@
+3 R202* 50mO MOGCA44611-000 * 0.2807[O] R 14  11  UPPER 464.3800[O] 10.2291[O]
+5 R201* 50mO MOGCA44611-000 * 0.2789[O] R 14   3 UPPER 471.8499[O] 10.1470[O]
+1429 R193 50mO MOGCA44611-000 * 0.6986[O] R 14   22 UPPER 2.5225[O] 2.1606[O]
+@E
+@B
+@
+Model : MOGCD34209_A_1.000
+Serial : BH1826MOG0008
+Date : 5/26/2026 3:06:44 PM
+Side: A
+Tester: APT-1400F-SL
+Operator: bakerlo
+* PASS *
+@
+@E
+@B
+@
+Model : MOGCD34209_A_1.000
+Serial : BH1826MOG0008
+Date : 5/26/2026 3:08:24 PM
+Side: B
+Tester: APT-1400F-SL
+Operator: bakerlo
+* PASS *
+@
+@E

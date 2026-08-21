@@ -531,7 +531,10 @@ def main():
     
     # Clean existing mock_data directory
     if os.path.exists(mock_dir):
-        shutil.rmtree(mock_dir)
+        try:
+            shutil.rmtree(mock_dir)
+        except Exception as e:
+            print(f"Warning: could not clean directory {mock_dir}: {e}")
         
     os.makedirs(mock_dir, exist_ok=True)
     
