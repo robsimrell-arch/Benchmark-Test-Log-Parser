@@ -1,0 +1,97 @@
+.... Verify Critical Components ....
+R20,Low Limit: 816.750 Ohms   ,High Limit: 833.250 Ohms   ,Expected: 825.00 Ohms    ,Measured: 827.08 Ohms    ,Result:    PASS        
+R37,Low Limit: 816.750 Ohms   ,High Limit: 833.250 Ohms   ,Expected: 825.00 Ohms    ,Measured: 827.75 Ohms    ,Result:    PASS        
+R54,Low Limit: 40.200 Ohms    ,High Limit: 50.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 44.99 Ohms     ,Result:    PASS        
+R55,Low Limit: 40.200 Ohms    ,High Limit: 50.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 45.01 Ohms     ,Result:    PASS        
+R79,Low Limit: 40.200 Ohms    ,High Limit: 50.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 44.91 Ohms     ,Result:    PASS        
+R92,Low Limit: 40.200 Ohms    ,High Limit: 50.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 44.99 Ohms     ,Result:    PASS        
+R175,Low Limit: 40.200 Ohms    ,High Limit: 50.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 45.08 Ohms     ,Result:    PASS        
+R176,Low Limit: 40.200 Ohms    ,High Limit: 50.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 45.73 Ohms     ,Result:    PASS        
+R145,Low Limit: 24.000 Ohms    ,High Limit: 26.000 Ohms    ,Expected: 25.00 Ohms     ,Measured: 25.04 Ohms     ,Result:    PASS        
+.... Verify Critical Components ...,  Time: 00:36 :,    PASS   
+.... Voltage Regulation Test ....
+VI Isolated (TP21(+) to TP7(-)),Low Limit: 6.00 Volts     ,High Limit: 6.80 Volts     ,Expected: 6.40 Volts     ,Measured: 6.26 Volts     ,Result:    PASS        
+VCC1_2 (TP22+) to TP7(-)),Low Limit: 1.05 Volts     ,High Limit: 1.45 Volts     ,Expected: 1.25 Volts     ,Measured: 1.26 Volts     ,Result:    PASS        
+VCC3 (TP24(+) to TP7(-)),Low Limit: 3.10 Volts     ,High Limit: 3.50 Volts     ,Expected: 3.30 Volts     ,Measured: 3.35 Volts     ,Result:    PASS        
+VCC (TP23(+) to TP7(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 5.03 Volts     ,Result:    PASS        
+VCC1 (TP26 to N(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 5.07 Volts     ,Result:    PASS        
+VCC2_5 (TP5(+) to TP7(-)),Low Limit: 2.30 Volts     ,High Limit: 2.70 Volts     ,Expected: 2.50 Volts     ,Measured: 2.49 Volts     ,Result:    PASS        
+V5X (TP17(+) to TP16(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 4.99 Volts     ,Result:    PASS        
+V3X (TP15(+) to TP16(-)),Low Limit: 3.10 Volts     ,High Limit: 3.50 Volts     ,Expected: 3.30 Volts     ,Measured: 3.30 Volts     ,Result:    PASS        
+5P (TP2(+) to TP4(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 5.00 Volts     ,Result:    PASS        
+5VD (TP18 to TP16(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 5.00 Volts     ,Result:    PASS        
+5C (TP9(+) to TP8(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 5.00 Volts     ,Result:    PASS        
+5D (TP14(+) to TP13(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 4.99 Volts     ,Result:    PASS        
+.... Voltage Regulation Test ...,  Time: 01:48 :,    PASS   
+.... Display Test ....
+Display Test,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: PASS           ,Measured: PASS           ,Result:    PASS        
+.... Display Test ...,  Time: 02:31 :,    PASS   
+.... LED Test ....
+Calibration RX1 RED,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+Calibration RX2 RED,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+Calibration Island RED,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+Occupancy Stick RED,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+Occupancy XR RED,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+Occupancy RX1 RED,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+Occupancy RX2 RED,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+Occupancy Island RED,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+Calibration RX1 GREEN,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+Calibration RX2 GREEN,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+Calibration Island GREEN,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+Occupancy Stick GREEN,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+Occupancy XR GREEN,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+Occupancy RX1 GREEN,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+Occupancy RX2 GREEN,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+Occupancy Island GREEN,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+Island LOS GREEN,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+OUT1 GREEN,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+OUT2 GREEN,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+OUT3 GREEN,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+IN1 GREEN,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+IN2 GREEN,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+HEALTH YELLOW,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Flashing       ,Measured: Flashing       ,Result:    PASS        
+POWER GREEN,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+.... LED Test ...,  Time: 03:04 :,    PASS   
+.... Set PSO 4000 to Default ....
+.... Program UUT ....
+.... Program UUT ...,  Time: 06:29 :,    PASS   
+.... Calibrate RX1 Test ....
+RX1 OUT1  LED Energized,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: De-Energized   ,Result: ***FAIL***     
+.... Calibrate RX1 Test ...,  Time: 08:29 :, ***FAIL***
+.... Calibrate RX2 Test ....
+RX2 OUT 2 LED Energized,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: De-Energized   ,Result: ***FAIL***     
+.... Calibrate RX2 Test ...,  Time: 10:12 :, ***FAIL***
+.... Calibrate Island Test ....
+Island OUT 3 Energized,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: De-Energized   ,Result: ***FAIL***     
+.... Calibrate Island Test ...,  Time: 11:52 :, ***FAIL***
+.... Transmiter 1 Test ....
+INT XR ,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: De-Energized   ,Measured: De-Energized   ,Result:    PASS        
+INT RX1,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: De-Energized   ,Measured: De-Energized   ,Result:    PASS        
+INT RX2,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: De-Energized   ,Result: ***FAIL***     
+INT Island,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: De-Energized   ,Result: ***FAIL***     
+INT XR ,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: De-Energized   ,Result: ***FAIL***     
+INT RX1,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: De-Energized   ,Result: ***FAIL***     
+INT RX2,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: De-Energized   ,Result: ***FAIL***     
+INT Island,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: De-Energized   ,Result: ***FAIL***     
+.... Transmiter 1 Test ...,  Time: 12:30 :, ***FAIL***
+.... Transmiter 2 Test ....
+INT XR ,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: De-Energized   ,Measured: De-Energized   ,Result:    PASS        
+INT RX1,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: De-Energized   ,Result: ***FAIL***     
+INT RX2,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: De-Energized   ,Measured: De-Energized   ,Result:    PASS        
+INT Island,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: De-Energized   ,Result: ***FAIL***     
+INT XR ,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: De-Energized   ,Result: ***FAIL***     
+INT RX1,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: De-Energized   ,Result: ***FAIL***     
+INT RX2,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: De-Energized   ,Result: ***FAIL***     
+INT Island,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: De-Energized   ,Result: ***FAIL***     
+.... Transmiter 2 Test ...,  Time: 13:04 :, ***FAIL***
+.... VRO Test ....
+VRO 1 Voltage,Low Limit: 9.50 Volts     ,High Limit: 11.50 Volts    ,Expected: 10.50 Volts    ,Measured: 0.00 Volts     ,Result: ***FAIL***     
+VRO 2 Voltage,Low Limit: 9.50 Volts     ,High Limit: 11.50 Volts    ,Expected: 10.50 Volts    ,Measured: 0.00 Volts     ,Result: ***FAIL***     
+VRO 3 Voltage,Low Limit: 9.50 Volts     ,High Limit: 11.50 Volts    ,Expected: 10.50 Volts    ,Measured: 0.00 Volts     ,Result: ***FAIL***     
+.... VRO Test ...,  Time: 13:25 :, ***FAIL***
+.... VPI Test ....
+VPI 1 De-energized,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: De-Energized   ,Measured: De-Energized   ,Result:    PASS        
+VPI 2 De-energized,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: De-Energized   ,Measured: De-Energized   ,Result:    PASS        
+VPI 1 Energized,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+VPI 2 Energized,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: Energized      ,Result:    PASS        
+.... VPI Test ...,  Time: 13:32 :,    PASS   

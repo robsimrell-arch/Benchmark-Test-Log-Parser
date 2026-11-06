@@ -91,7 +91,7 @@ class Api:
             return []
 
         def progress_callback(current, total, message):
-            if self._window:
+            if self._window and (current == 0 or current == total or current % 20 == 0):
                 escaped_msg = message.replace("'", "\\'").replace("\n", " ")
                 self._window.evaluate_js(f"if (window.updateScanProgress) window.updateScanProgress({current}, {total}, '{escaped_msg}');")
 
@@ -201,7 +201,11 @@ def main():
     )
     api.set_window(window)
     # Start the webview loop
-    webview.start()
+    icon_path = os.path.abspath('app_icon.ico') if os.path.exists('app_icon.ico') else None
+    if icon_path:
+        webview.start(icon=icon_path)
+    else:
+        webview.start()
 
 if __name__ == '__main__':
     main()

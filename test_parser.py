@@ -135,6 +135,93 @@ class TestSiemensParser(unittest.TestCase):
         self.assertEqual(res["type"], "section")
         self.assertEqual(res["name"], "Power Rails Verification")
 
+    def test_run_name_parsing_tf80428_csv(self):
+        filename = "Siemens_80428_027791_042420260924_PASS_pg1.csv"
+        res = self.parser._parse_run_name(filename)
+        self.assertIsNotNone(res)
+        self.assertEqual(res["customer"], "Siemens")
+        self.assertEqual(res["part_num_3rd"], "TF80428")
+        self.assertEqual(res["part_number"], "TF80428")
+        self.assertEqual(res["serial"], "027791")
+        self.assertEqual(res["date_time"], "2026-04-24 09:24")
+        self.assertEqual(res["status"], "PASS")
+        self.assertEqual(res["suffix"], "_pg1")
+
+    def test_run_name_parsing_tf80428_zip(self):
+        filename = "Siemens_80428_101197_081420261530_PASS.zip"
+        res = self.parser._parse_run_name(filename)
+        self.assertIsNotNone(res)
+        self.assertEqual(res["customer"], "Siemens")
+        self.assertEqual(res["part_num_3rd"], "TF80428")
+        self.assertEqual(res["part_number"], "TF80428")
+        self.assertEqual(res["serial"], "101197")
+        self.assertEqual(res["date_time"], "2026-08-14 15:30")
+        self.assertEqual(res["status"], "PASS")
+
+    def test_parse_pg6_prefixed_row(self):
+        row = [
+            "R20",
+            "Low Limit: 816.750 Ohms   ",
+            "High Limit: 833.250 Ohms   ",
+            "Expected: 825.00 Ohms    ",
+            "Measured: 826.29 Ohms    ",
+            "Result:    PASS"
+        ]
+        res = self.parser._parse_single_row(row)
+        self.assertIsNotNone(res)
+        self.assertEqual(res["type"], "step")
+        self.assertEqual(res["name"], "R20")
+        self.assertEqual(res["low_limit"], "816.750 Ohms")
+        self.assertEqual(res["high_limit"], "833.250 Ohms")
+        self.assertEqual(res["expected"], "825.00 Ohms")
+        self.assertEqual(res["measured"], "826.29 Ohms")
+        self.assertEqual(res["result"], "PASS")
+        self.assertEqual(res["raw_result"], "PASS")
+
+    def test_multi_page_deduplication(self):
+        # Line sets simulating pg3 and pg6 with identical component
+        pg3_lines = [
+            "R20,816.750 Ohms,833.250 Ohms,825.00 Ohms,826.29 Ohms,PASS\n",
+            "R37,816.750 Ohms,833.250 Ohms,825.00 Ohms,827.70 Ohms,PASS\n"
+        ]
+        pg6_lines = [
+            "R20,Low Limit: 816.750 Ohms,High Limit: 833.250 Ohms,Expected: 825.00 Ohms,Measured: 826.29 Ohms,Result: PASS\n",
+            "R54,Low Limit: 40.200 Ohms,High Limit: 50.200 Ohms,Expected: 45.20 Ohms,Measured: 44.99 Ohms,Result: PASS\n"
+        ]
+        steps = self.parser._parse_all_step_lines([pg3_lines, pg6_lines])
+        self.assertEqual(len(steps), 3)
+        step_names = [s["name"] for s in steps]
+        self.assertEqual(step_names, ["R20", "R37", "R54"])
+
+    def test_scan_directory_direct_part_folder(self):
+        # Test scanning directly from a part folder (e.g. TF80428/) containing date folders
+        tmp_dir = tempfile.mkdtemp()
+        try:
+            date_dir = os.path.join(tmp_dir, "Friday_April 24_2026")
+            os.makedirs(date_dir)
+            
+            pg1_content = "Operator Name,Test Procedure\n"
+            pg2_content = "TF80428 Test, Time: 10:19, PASS\n"
+            
+            pg1_path = os.path.join(date_dir, "Siemens_80428_027791_042420260924_PASS_pg1.csv")
+            pg2_path = os.path.join(date_dir, "Siemens_80428_027791_042420260924_PASS_pg2.csv")
+            
+            with open(pg1_path, "w") as f:
+                f.write(pg1_content)
+            with open(pg2_path, "w") as f:
+                f.write(pg2_content)
+                
+            runs = self.parser.scan_directory(tmp_dir)
+            self.assertEqual(len(runs), 1)
+            run = runs[0]
+            self.assertEqual(run["serial"], "027791")
+            self.assertEqual(run["part_number"], "TF80428")
+            self.assertEqual(run["customer"], "Siemens")
+            self.assertEqual(run["status"], "PASS")
+            self.assertEqual(len(run["steps"]), 1)
+        finally:
+            shutil.rmtree(tmp_dir)
+
     def test_scan_directory_siemens(self):
         # Create a temp dir structure simulating Siemens logs
         tmp_dir = tempfile.mkdtemp()

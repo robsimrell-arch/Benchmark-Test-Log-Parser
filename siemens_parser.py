@@ -7,6 +7,22 @@ import io
 from base_parser import BaseParser
 
 class SiemensParser(BaseParser):
+    def _normalize_part_number(self, part_str):
+        if not part_str:
+            return ""
+        part_str = part_str.strip()
+        if not part_str.upper().startswith("TF"):
+            return f"TF{part_str}"
+        return part_str
+
+    def _clean_prefix(self, val, prefix):
+        if not val:
+            return ""
+        val = val.strip()
+        if val.lower().startswith(prefix.lower()):
+            return val[len(prefix):].strip()
+        return val
+
     def scan_directory(self, parent_path, progress_callback=None, force_rescan=False):
         """Scans the directory tree for test logs and returns a list of parsed runs."""
         if not parent_path or not os.path.exists(parent_path):
@@ -15,40 +31,19 @@ class SiemensParser(BaseParser):
         from scan_cache import ScanCache
         cache = ScanCache(parent_path, "siemens", force_rescan)
         runs = []
-        # Level 1: Part Number (e.g. TF80418)
-        try:
-            p1_items = os.listdir(parent_path)
-        except Exception as e:
-            print(f"Error reading parent path: {e}")
-            return []
 
-        # Collect all candidates first to support progress reporting
+        # Collect all candidate files across directory tree
         candidates = []
-        for p1 in p1_items:
-            p1_path = os.path.join(parent_path, p1)
-            if not os.path.isdir(p1_path):
-                continue
-            # Level 2: Date (e.g. Tuesday_June 09_2026)
-            try:
-                p2_items = os.listdir(p1_path)
-            except Exception:
-                continue
-            for p2 in p2_items:
-                p2_path = os.path.join(p1_path, p2)
-                if not os.path.isdir(p2_path):
-                    continue
-                # Level 3: Zip files, folders, or loose CSV files
-                try:
-                    p3_items = os.listdir(p2_path)
-                except Exception:
-                    continue
-                for p3 in p3_items:
-                    p3_path = os.path.join(p2_path, p3)
-                    is_zip = zipfile.is_zipfile(p3_path)
-                    is_dir = os.path.isdir(p3_path)
-                    is_csv = p3_path.lower().endswith('.csv')
-                    if is_zip or is_dir or is_csv:
-                        candidates.append((p3_path, p1, is_zip, is_dir, is_csv, p3))
+        for root, dirs, files in os.walk(parent_path):
+            # Ignore hidden and non-log config folders
+            dirs[:] = [d for d in dirs if not d.startswith('.') and d.lower() != 'configuration']
+            for f in files:
+                f_lower = f.lower()
+                is_zip = f_lower.endswith('.zip')
+                is_csv = f_lower.endswith('.csv')
+                if is_zip or is_csv:
+                    f_path = os.path.join(root, f)
+                    candidates.append((f_path, is_zip, False, is_csv, f))
 
         total = len(candidates)
         all_candidate_paths = [c[0] for c in candidates]
@@ -57,7 +52,7 @@ class SiemensParser(BaseParser):
         if progress_callback and total > 0:
             progress_callback(0, total, f"Starting scanning of {total} items...")
 
-        for p3_path, p1, is_zip, is_dir, is_csv, p3 in candidates:
+        for p3_path, is_zip, is_dir, is_csv, p3 in candidates:
             # Check cache first
             cached_runs = cache.get_cached_runs(p3_path)
             if cached_runs is not None:
@@ -72,8 +67,6 @@ class SiemensParser(BaseParser):
                 completed += 1
                 continue
 
-            # Add part number from Level 1 folder
-            meta["part_number"] = p1
             meta["path"] = p3_path
             meta["is_zip"] = is_zip
 
@@ -89,8 +82,7 @@ class SiemensParser(BaseParser):
                     all_lines = self._read_all_loose_csvs(p3_path)
                     
                 if all_lines:
-                    for line_set in all_lines:
-                        steps.extend(self._parse_csv_rows(line_set))
+                    steps = self._parse_all_step_lines(all_lines)
             except Exception as e:
                 print(f"Error parsing steps for {p3}: {e}")
 
@@ -155,8 +147,7 @@ class SiemensParser(BaseParser):
                 all_lines = self._read_all_loose_csvs(path)
                 
             if all_lines:
-                for line_set in all_lines:
-                    steps.extend(self._parse_csv_rows(line_set))
+                steps = self._parse_all_step_lines(all_lines)
         except Exception as e:
             print(f"Error parsing steps for {path}: {e}")
         return steps
@@ -321,17 +312,18 @@ class SiemensParser(BaseParser):
         # Strip extension if any
         name, ext = os.path.splitext(run_name)
         
-        # Try Format B first (since it is more specific with double underscore and 12-digit datetime)
+        # 1. Format B: Double underscore with 12-digit datetime
+        # e.g., Siemens_TF80418_26200213__061520261110_PASS_pg1.csv
         match_b = re.match(r"^(.+)_([^_]+)_([^_]+)__(\d{12})_(PASS|FAIL)(.*)$", name, re.IGNORECASE)
         if match_b:
             customer = match_b.group(1)
-            part_num_3rd = match_b.group(2)
+            raw_part = match_b.group(2)
             serial = match_b.group(3)
             datetime_str = match_b.group(4)
             status = match_b.group(5).upper()
             suffix = match_b.group(6)
             
-            # Format date: MMDDYYYYHHMM -> YYYY-MM-DD HH:MM
+            norm_part = self._normalize_part_number(raw_part)
             month = datetime_str[0:2]
             day = datetime_str[2:4]
             year = datetime_str[4:8]
@@ -341,7 +333,40 @@ class SiemensParser(BaseParser):
             
             return {
                 "customer": customer,
-                "part_num_3rd": part_num_3rd,
+                "part_num_3rd": norm_part,
+                "part_number": norm_part,
+                "serial": serial,
+                "date_time": formatted_date,
+                "raw_date": datetime_str[0:8],
+                "raw_time": datetime_str[8:12],
+                "status": status,
+                "file_ext": ext,
+                "suffix": suffix
+            }
+
+        # 2. Format C: Single underscore with 12-digit datetime
+        # e.g., Siemens_80428_027791_042420260924_PASS_pg1.csv or Siemens_80428_101197_081420261530_PASS.zip
+        match_c = re.match(r"^(.+)_([^_]+)_([^_]+)_(\d{12})_(PASS|FAIL)(.*)$", name, re.IGNORECASE)
+        if match_c:
+            customer = match_c.group(1)
+            raw_part = match_c.group(2)
+            serial = match_c.group(3)
+            datetime_str = match_c.group(4)
+            status = match_c.group(5).upper()
+            suffix = match_c.group(6)
+            
+            norm_part = self._normalize_part_number(raw_part)
+            month = datetime_str[0:2]
+            day = datetime_str[2:4]
+            year = datetime_str[4:8]
+            hour = datetime_str[8:10]
+            minute = datetime_str[10:12]
+            formatted_date = f"{year}-{month}-{day} {hour}:{minute}"
+            
+            return {
+                "customer": customer,
+                "part_num_3rd": norm_part,
+                "part_number": norm_part,
                 "serial": serial,
                 "date_time": formatted_date,
                 "raw_date": datetime_str[0:8],
@@ -351,19 +376,19 @@ class SiemensParser(BaseParser):
                 "suffix": suffix
             }
             
-        # Try Format A
+        # 3. Format A: Separate 8-digit date and 4-digit time
+        # e.g., Siemens_TF80418_26200213_06152026_1110_PASS.csv or Siemens_80418_099257_06092026_0535_PASS.zip
         match_a = re.match(r"^(.+)_([^_]+)_([^_]+)_(\d{8})_(\d{4})_(PASS|FAIL)(.*)$", name, re.IGNORECASE)
         if match_a:
             customer = match_a.group(1)
-            part_num_3rd = match_a.group(2)
+            raw_part = match_a.group(2)
             serial = match_a.group(3)
             date_str = match_a.group(4)
             time_str = match_a.group(5)
             status = match_a.group(6).upper()
             suffix = match_a.group(7)
             
-            # Format date: MMDDYYYY -> YYYY-MM-DD
-            # Time: HHMM -> HH:MM
+            norm_part = self._normalize_part_number(raw_part)
             month = date_str[0:2]
             day = date_str[2:4]
             year = date_str[4:]
@@ -373,7 +398,8 @@ class SiemensParser(BaseParser):
             
             return {
                 "customer": customer,
-                "part_num_3rd": part_num_3rd,
+                "part_num_3rd": norm_part,
+                "part_number": norm_part,
                 "serial": serial,
                 "date_time": formatted_date,
                 "raw_date": date_str,
@@ -391,8 +417,9 @@ class SiemensParser(BaseParser):
                 time_str = parts[-2]
                 date_str = parts[-3]
                 serial = parts[-4]
-                part_num_3rd = parts[-5]
+                raw_part = parts[-5]
                 customer = "_".join(parts[:-5])
+                norm_part = self._normalize_part_number(raw_part)
                 
                 if len(date_str) == 8 and len(time_str) == 4:
                     month = date_str[0:2]
@@ -406,7 +433,8 @@ class SiemensParser(BaseParser):
                     
                 return {
                     "customer": customer,
-                    "part_num_3rd": part_num_3rd,
+                    "part_num_3rd": norm_part,
+                    "part_number": norm_part,
                     "serial": serial,
                     "date_time": formatted_date,
                     "raw_date": date_str,
@@ -426,7 +454,7 @@ class SiemensParser(BaseParser):
             return None
             
         # Check if it is a pg2 step row (lengths between 3 and 5, with result in row[2])
-        if len(row) >= 3 and len(row) < 6:
+        if 3 <= len(row) < 6:
             result_col = row[2].strip().upper()
             if "PASS" in result_col:
                 result = "PASS"
@@ -441,9 +469,9 @@ class SiemensParser(BaseParser):
                 "low_limit": "---N/A---",
                 "high_limit": "---N/A---",
                 "expected": "---N/A---",
-                "measured": row[1].strip(),
+                "measured": row[1].strip().rstrip(":").strip(),
                 "result": result,
-                "raw_result": row[2].strip()
+                "raw_result": self._clean_prefix(row[2].strip(), "Result:")
             }
             
         # Check if it is a section header (starts and ends with "..")
@@ -455,25 +483,25 @@ class SiemensParser(BaseParser):
                 "name": section_name
             }
             
-        # Check if it is a pg3/pg4 step row (len(row) >= 6)
+        # Check if it is a pg3/pg4/pg5/pg6 step row (len(row) >= 6)
         if len(row) >= 6:
-            raw_result = row[5].strip().upper()
-            if "PASS" in raw_result:
+            raw_result = self._clean_prefix(row[5].strip(), "Result:")
+            if "PASS" in raw_result.upper():
                 result = "PASS"
-            elif "FAIL" in raw_result:
+            elif "FAIL" in raw_result.upper():
                 result = "FAIL"
             else:
                 return None
                 
             return {
                 "type": "step",
-                "name": first_col,
-                "low_limit": row[1].strip(),
-                "high_limit": row[2].strip(),
-                "expected": row[3].strip(),
-                "measured": row[4].strip(),
+                "name": first_col.strip(".").strip(),
+                "low_limit": self._clean_prefix(row[1].strip(), "Low Limit:"),
+                "high_limit": self._clean_prefix(row[2].strip(), "High Limit:"),
+                "expected": self._clean_prefix(row[3].strip(), "Expected:"),
+                "measured": self._clean_prefix(row[4].strip(), "Measured:"),
                 "result": result,
-                "raw_result": row[5].strip()
+                "raw_result": raw_result
             }
             
         return None
@@ -485,4 +513,26 @@ class SiemensParser(BaseParser):
             parsed = self._parse_single_row(row)
             if parsed:
                 steps.append(parsed)
+        return steps
+
+    def _parse_all_step_lines(self, all_line_sets):
+        """Parses multiple sets of lines (e.g. from pg1..pg6) and deduplicates steps."""
+        steps = []
+        seen_steps = set()
+        seen_sections = set()
+        for line_set in all_line_sets:
+            reader = csv.reader(line_set)
+            for row in reader:
+                parsed = self._parse_single_row(row)
+                if not parsed:
+                    continue
+                if parsed["type"] == "step":
+                    if parsed["name"] in seen_steps:
+                        continue
+                    seen_steps.add(parsed["name"])
+                    steps.append(parsed)
+                elif parsed["type"] == "section":
+                    if parsed["name"] not in seen_sections:
+                        seen_sections.add(parsed["name"])
+                        steps.append(parsed)
         return steps

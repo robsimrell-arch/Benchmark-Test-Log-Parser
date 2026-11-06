@@ -20,13 +20,14 @@ let diagnosticSearchQuery = '';
 let dateFromValue = '';
 let dateToValue = '';
 let selectedRun = null;
+let autoRefreshTimer = null;
+let isScanning = false;
 
 // DOM Elements
 const selectDirBtn = document.getElementById('select-dir-btn');
 const parentDirInput = document.getElementById('parent-dir-input');
 const parserSelect = document.getElementById('parser-select');
 const scanBtn = document.getElementById('scan-btn');
-const forceScanBtn = document.getElementById('force-scan-btn');
 const exportBtn = document.getElementById('export-btn');
 const failureViewBtn = document.getElementById('failure-view-btn');
 const logsTbody = document.getElementById('logs-tbody');
@@ -100,7 +101,9 @@ window.addEventListener('pywebviewready', async () => {
         if (lastDir) {
             parentDirInput.value = lastDir;
             scanBtn.removeAttribute('disabled');
-            forceScanBtn.removeAttribute('disabled');
+            // Automatically scan and populate data on startup
+            await performScan(false);
+            startAutoRefresh();
         }
     } catch (err) {
         console.error('Error loading last directory:', err);
@@ -135,7 +138,8 @@ selectDirBtn.addEventListener('click', async () => {
         if (path) {
             parentDirInput.value = path;
             scanBtn.removeAttribute('disabled');
-            forceScanBtn.removeAttribute('disabled');
+            await performScan(false);
+            startAutoRefresh();
         }
     } catch (err) {
         console.error('Error selecting directory:', err);
@@ -146,7 +150,12 @@ parserSelect.addEventListener('change', async () => {
     try {
         await window.pywebview.api.set_active_parser(parserSelect.value);
         updateColumnsVisibility();
-        resetData();
+        if (parentDirInput.value) {
+            await performScan(false);
+            startAutoRefresh();
+        } else {
+            resetData();
+        }
     } catch (err) {
         console.error('Error setting active parser:', err);
     }
@@ -185,56 +194,102 @@ function resetData() {
     failureViewBtn.setAttribute('disabled', 'true');
 }
 
-async function performScan(forceRescan) {
+function hasDataChanged(oldData, newData) {
+    if (!oldData || !newData) return true;
+    if (oldData.length !== newData.length) return true;
+    if (oldData.length === 0 && newData.length === 0) return false;
+    
+    // Check first few and last runs for changes
+    const checkIndices = [0, 1, 2, 3, 4, Math.floor(oldData.length / 2), oldData.length - 1];
+    for (let idx of checkIndices) {
+        if (idx < oldData.length) {
+            const o = oldData[idx];
+            const n = newData[idx];
+            if (!n || o.serial !== n.serial || o.date_time !== n.date_time || o.status !== n.status || o.part_number !== n.part_number) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+async function performScan(isBackground = false) {
     const path = parentDirInput.value;
     if (!path) return;
+    if (isScanning) return;
 
-    scanBtn.setAttribute('disabled', 'true');
-    forceScanBtn.setAttribute('disabled', 'true');
-    
-    if (forceRescan) {
-        forceScanBtn.textContent = 'Scanning...';
-    } else {
+    isScanning = true;
+
+    if (!isBackground) {
+        scanBtn.setAttribute('disabled', 'true');
         scanBtn.textContent = 'Scanning...';
+        if (allData.length === 0) {
+            logsTbody.innerHTML = `<tr><td colspan="${getColspan()}" class="empty-state">Scanning directory tree... please wait.</td></tr>`;
+        }
+        if (window.updateScanProgress) window.updateScanProgress(0, 100, 'Starting scan...');
+        scanProgressContainer.style.display = 'block';
     }
-    
-    logsTbody.innerHTML = `<tr><td colspan="${getColspan()}" class="empty-state">Scanning directory tree... please wait.</td></tr>`;
-    
-    // Reset and show progress bar
-    if (window.updateScanProgress) window.updateScanProgress(0, 100, 'Starting scan...');
-    scanProgressContainer.style.display = 'block';
 
     try {
-        const results = await window.pywebview.api.scan_directory(path, forceRescan);
-        allData = results || [];
-        updatePartNumberDropdown(allData);
-        filteredData = [...allData];
-        currentPage = 1;
-        
-        updateKPIs();
-        applyFiltersAndRender();
-        
-        if (allData.length > 0) {
-            exportBtn.removeAttribute('disabled');
-            failureViewBtn.removeAttribute('disabled');
-        } else {
-            exportBtn.setAttribute('disabled', 'true');
-            failureViewBtn.setAttribute('disabled', 'true');
+        const results = await window.pywebview.api.scan_directory(path);
+        const newResults = results || [];
+        const dataChanged = hasDataChanged(allData, newResults);
+
+        if (dataChanged || allData.length === 0) {
+            allData = newResults;
+            updatePartNumberDropdown(allData);
+            filteredData = [...allData];
+            
+            updateKPIs();
+            applyFiltersAndRender();
+            
+            if (allData.length > 0) {
+                exportBtn.removeAttribute('disabled');
+                failureViewBtn.removeAttribute('disabled');
+            } else {
+                exportBtn.setAttribute('disabled', 'true');
+                failureViewBtn.setAttribute('disabled', 'true');
+            }
+
+            if (selectedRun && detailsModal && detailsModal.style.display !== 'none') {
+                const refreshedRun = allData.find(r => r.serial === selectedRun.serial && r.date_time === selectedRun.date_time);
+                if (refreshedRun) {
+                    selectedRun = refreshedRun;
+                }
+            }
         }
     } catch (err) {
         console.error('Error scanning directory:', err);
-        logsTbody.innerHTML = `<tr><td colspan="${getColspan()}" class="empty-state" style="color:var(--color-fail)">Scan failed: ${err.message || err}</td></tr>`;
+        if (!isBackground) {
+            logsTbody.innerHTML = `<tr><td colspan="${getColspan()}" class="empty-state" style="color:var(--color-fail)">Scan failed: ${err.message || err}</td></tr>`;
+        }
     } finally {
-        scanBtn.removeAttribute('disabled');
-        forceScanBtn.removeAttribute('disabled');
-        scanBtn.textContent = 'Quick Scan';
-        forceScanBtn.textContent = 'Force Full Rescan';
-        scanProgressContainer.style.display = 'none';
+        isScanning = false;
+        if (!isBackground) {
+            scanBtn.removeAttribute('disabled');
+            scanBtn.textContent = 'Scan Now';
+            scanProgressContainer.style.display = 'none';
+        }
+    }
+}
+
+function startAutoRefresh() {
+    stopAutoRefresh();
+    autoRefreshTimer = setInterval(() => {
+        if (parentDirInput.value && !isScanning) {
+            performScan(true);
+        }
+    }, 3000);
+}
+
+function stopAutoRefresh() {
+    if (autoRefreshTimer) {
+        clearInterval(autoRefreshTimer);
+        autoRefreshTimer = null;
     }
 }
 
 scanBtn.addEventListener('click', () => performScan(false));
-forceScanBtn.addEventListener('click', () => performScan(true));
 
 exportBtn.addEventListener('click', async () => {
     if (filteredData.length === 0) return;

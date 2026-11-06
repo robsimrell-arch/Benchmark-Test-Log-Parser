@@ -17,6 +17,7 @@ class ScanCache:
         self.force_rescan = force_rescan
         self.cache_path = get_cache_path(parent_path, parser_name)
         self.data = {"parser": parser_name, "files": {}}
+        self._dirty = False
         if not force_rescan and os.path.exists(self.cache_path):
             try:
                 with open(self.cache_path, 'r', encoding='utf-8') as f:
@@ -53,6 +54,7 @@ class ScanCache:
                 "mtime": mtime,
                 "runs": runs
             }
+            self._dirty = True
         except Exception:
             pass
 
@@ -63,9 +65,12 @@ class ScanCache:
         for path in cached_paths:
             if path not in active_set:
                 self.data["files"].pop(path, None)
+                self._dirty = True
                 
-        try:
-            with open(self.cache_path, 'w', encoding='utf-8') as f:
-                json.dump(self.data, f)
-        except Exception as e:
-            print(f"Error saving cache: {e}")
+        if self._dirty:
+            try:
+                with open(self.cache_path, 'w', encoding='utf-8') as f:
+                    json.dump(self.data, f)
+                self._dirty = False
+            except Exception as e:
+                print(f"Error saving cache: {e}")

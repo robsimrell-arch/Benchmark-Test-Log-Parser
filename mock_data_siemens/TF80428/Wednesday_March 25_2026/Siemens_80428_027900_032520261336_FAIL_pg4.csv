@@ -1,0 +1,27 @@
+.... DASH 5 Verify Critical Components ....
+R20,Low Limit: 816.750 Ohms   ,High Limit: 833.250 Ohms   ,Expected: 825.00 Ohms    ,Measured: 98999999999999993400000000000000000000.00 Ohms,Result: ***FAIL***     
+R54,Low Limit: 40.200 Ohms    ,High Limit: 50.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 98999999999999993400000000000000000000.00 Ohms,Result: ***FAIL***     
+R55,Low Limit: 40.200 Ohms    ,High Limit: 50.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 98999999999999993400000000000000000000.00 Ohms,Result: ***FAIL***     
+R145,Low Limit: 24.000 Ohms    ,High Limit: 26.000 Ohms    ,Expected: 25.00 Ohms     ,Measured: 98999999999999993400000000000000000000.00 Ohms,Result: ***FAIL***     
+.... DASH 5 Verify Critical Components ...,  Time: 00:23 :, ***FAIL***
+.... DASH 5 Voltage Regulation Test ....
+VI Isolated (TP21(+) to TP7(-)),Low Limit: 6.00 Volts     ,High Limit: 6.80 Volts     ,Expected: 6.40 Volts     ,Measured: 0.00 Volts     ,Result: ***FAIL***     
+VCC1_2 (TP22+) to TP7(-)),Low Limit: 1.05 Volts     ,High Limit: 1.45 Volts     ,Expected: 1.25 Volts     ,Measured: 0.00 Volts     ,Result: ***FAIL***     
+VCC3 (TP24(+) to TP7(-)),Low Limit: 3.10 Volts     ,High Limit: 3.50 Volts     ,Expected: 3.30 Volts     ,Measured: 0.01 Volts     ,Result: ***FAIL***     
+VCC (TP23(+) to TP7(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 0.00 Volts     ,Result: ***FAIL***     
+VCC1 (TP26 to N(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 0.00 Volts     ,Result: ***FAIL***     
+VCC2_5 (TP5(+) to TP7(-)),Low Limit: 2.30 Volts     ,High Limit: 2.70 Volts     ,Expected: 2.50 Volts     ,Measured: 0.00 Volts     ,Result: ***FAIL***     
+V5X (TP17(+) to TP16(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 0.00 Volts     ,Result: ***FAIL***     
+V3X (TP15(+) to TP16(-)),Low Limit: 3.10 Volts     ,High Limit: 3.50 Volts     ,Expected: 3.30 Volts     ,Measured: -0.00 Volts    ,Result: ***FAIL***     
+5P (TP2(+) to TP4(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 0.00 Volts     ,Result: ***FAIL***     
+5VD (TP18 to TP16(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 0.00 Volts     ,Result: ***FAIL***     
+.... DASH 5 Voltage Regulation Test ...,  Time: 01:28 :, ***FAIL***
+.... DASH 5 Program UUT ....
+.... DASH 5 Program UUT ...,  Time: 04:53 :, ***FAIL***
+.... DASH 5 Calibrate RX1 Test ....
+RX1 OUT1  LED Energized,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: Energized      ,Measured: De-Energized   ,Result: ***FAIL***     
+.... DASH 5 Calibrate RX1 Test ...,  Time: 07:04 :, ***FAIL***
+.... DASH 5 VRO Test ....
+VRO 1 Voltage,Low Limit: 9.50 Volts     ,High Limit: 11.50 Volts    ,Expected: 10.50 Volts    ,Measured: 0.00 Volts     ,Result: ***FAIL***     
+VRO 1 Voltage,Low Limit: -1.00 Volts    ,High Limit: 1.00 Volts     ,Expected: 0.00 Volts     ,Measured: -0.00 Volts    ,Result:    PASS        
+.... DASH 5 VRO Test ...,  Time: 07:17 :, ***FAIL***

@@ -1,0 +1,11 @@
+.... Verify Critical Components ....
+R20,Low Limit: 816.750 Ohms   ,High Limit: 833.250 Ohms   ,Expected: 825.00 Ohms    ,Measured: 825.19 Ohms    ,Result:    PASS        
+R37,Low Limit: 816.750 Ohms   ,High Limit: 833.250 Ohms   ,Expected: 825.00 Ohms    ,Measured: 825.30 Ohms    ,Result:    PASS        
+R54,Low Limit: 43.200 Ohms    ,High Limit: 47.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 43.45 Ohms     ,Result:    PASS        
+R55,Low Limit: 43.200 Ohms    ,High Limit: 47.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 43.47 Ohms     ,Result:    PASS        
+R79,Low Limit: 43.200 Ohms    ,High Limit: 47.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 43.37 Ohms     ,Result:    PASS        
+R92,Low Limit: 43.200 Ohms    ,High Limit: 47.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 43.36 Ohms     ,Result:    PASS        
+R175,Low Limit: 43.200 Ohms    ,High Limit: 47.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 43.52 Ohms     ,Result:    PASS        
+R176,Low Limit: 43.200 Ohms    ,High Limit: 47.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 47.64 Ohms     ,Result: ***FAIL***     
+R145,Low Limit: 24.000 Ohms    ,High Limit: 26.000 Ohms    ,Expected: 25.00 Ohms     ,Measured: 25.09 Ohms     ,Result:    PASS        
+.... Verify Critical Components ...,  Time: 00:25 :, ***FAIL***

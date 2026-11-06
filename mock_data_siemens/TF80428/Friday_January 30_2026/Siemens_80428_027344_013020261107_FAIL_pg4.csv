@@ -1,0 +1,30 @@
+.... Verify Critical Components ....
+R20,Low Limit: 816.750 Ohms   ,High Limit: 833.250 Ohms   ,Expected: 825.00 Ohms    ,Measured: 825.24 Ohms    ,Result:    PASS        
+R37,Low Limit: 816.750 Ohms   ,High Limit: 833.250 Ohms   ,Expected: 825.00 Ohms    ,Measured: 825.34 Ohms    ,Result:    PASS        
+R54,Low Limit: 43.200 Ohms    ,High Limit: 47.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 43.45 Ohms     ,Result:    PASS        
+R55,Low Limit: 43.200 Ohms    ,High Limit: 47.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 43.46 Ohms     ,Result:    PASS        
+R79,Low Limit: 43.200 Ohms    ,High Limit: 47.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 43.38 Ohms     ,Result:    PASS        
+R92,Low Limit: 43.200 Ohms    ,High Limit: 47.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 43.38 Ohms     ,Result:    PASS        
+R175,Low Limit: 43.200 Ohms    ,High Limit: 47.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 43.58 Ohms     ,Result:    PASS        
+R176,Low Limit: 43.200 Ohms    ,High Limit: 47.200 Ohms    ,Expected: 45.20 Ohms     ,Measured: 44.62 Ohms     ,Result:    PASS        
+R145,Low Limit: 24.000 Ohms    ,High Limit: 26.000 Ohms    ,Expected: 25.00 Ohms     ,Measured: 25.04 Ohms     ,Result:    PASS        
+.... Verify Critical Components ...,  Time: 00:25 :,    PASS   
+.... Configure Equipment for Test ....
+.... Configure Equipment for Test ...,  Time: 00:36 :,    PASS   
+.... Voltage Regulation Test ....
+VI Isolated (TP21(+) to TP7(-)),Low Limit: 6.00 Volts     ,High Limit: 6.80 Volts     ,Expected: 6.40 Volts     ,Measured: 6.22 Volts     ,Result:    PASS        
+VCC1_2 (TP22+) to TP7(-)),Low Limit: 1.05 Volts     ,High Limit: 1.45 Volts     ,Expected: 1.25 Volts     ,Measured: 1.25 Volts     ,Result:    PASS        
+VCC3 (TP24(+) to TP7(-)),Low Limit: 3.10 Volts     ,High Limit: 3.50 Volts     ,Expected: 3.30 Volts     ,Measured: 3.35 Volts     ,Result:    PASS        
+VCC (TP23(+) to TP7(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 4.99 Volts     ,Result:    PASS        
+VCC1 (TP26 to N(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 5.07 Volts     ,Result:    PASS        
+VCC2_5 (TP5(+) to TP7(-)),Low Limit: 2.30 Volts     ,High Limit: 2.70 Volts     ,Expected: 2.50 Volts     ,Measured: 2.50 Volts     ,Result:    PASS        
+V5X (TP17(+) to TP16(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 4.99 Volts     ,Result:    PASS        
+V3X (TP15(+) to TP16(-)),Low Limit: 3.10 Volts     ,High Limit: 3.50 Volts     ,Expected: 3.30 Volts     ,Measured: 3.28 Volts     ,Result:    PASS        
+5P (TP2(+) to TP4(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 4.97 Volts     ,Result:    PASS        
+5VD (TP18 to TP16(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 5.00 Volts     ,Result:    PASS        
+5C (TP9(+) to TP8(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 4.98 Volts     ,Result:    PASS        
+5D (TP14(+) to TP13(-)),Low Limit: 4.50 Volts     ,High Limit: 5.50 Volts     ,Expected: 5.00 Volts     ,Measured: 5.01 Volts     ,Result:    PASS        
+.... Voltage Regulation Test ...,  Time: 01:25 :,    PASS   
+.... Display Test ....
+Display Test,Low Limit: ---N/A---      ,High Limit: ---N/A---      ,Expected: PASS           ,Measured: FAIL           ,Result: ***FAIL***     
+.... Display Test ...,  Time: 03:04 :, ***FAIL***
